@@ -1,0 +1,9 @@
+
+name: "my-website"
+navbar:
+  title: "My website"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "Beer Study"
+      href: Beer.rmd

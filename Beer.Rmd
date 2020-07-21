@@ -1,0 +1,236 @@
+---
+title: "Case study"
+author: "Samuel, Eric and Amber"
+date: "6/21/2020"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r dataload, include=TRUE}
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+library(usmap)
+library(maps)
+library(ggplot2)
+library(plotly)
+library(dplyr)
+library(ggthemes)
+library(grid)
+library(tidyr)
+library(stringr)
+library(naniar)
+library(mice)
+library(rpart)
+library(rpart.plot)
+```
+
+```{r}
+#import raw data and change field names 
+beers <- read.csv("Beers.csv") %>% rename(Brew_ID = Brewery_id, Beer_name = Name)
+breweries <- read.csv("Breweries.csv") %>% rename(Brewery_name = Name)
+
+```
+
+```{r}
+
+#Question 1
+#Number of breweries per state
+breweries_by_state <- breweries %>%  group_by(State) %>% summarize(count = n())
+
+# Notice empty white spaces in the state abbreviation field. Remove it first:
+breweries_by_state$State <- str_trim(breweries_by_state$State, "left")
+
+# Change the state abbreviation column.
+colnames(breweries_by_state)[1] = "abbr"
+
+# library(maps)
+states <- map_data("state")
+
+# add DC to embedded "state" dataset:
+statesDC <- tibble(state = state.name) %>%
+   bind_cols(tibble(abbr = state.abb)) %>% 
+   bind_rows(tibble(state = "District of Columbia", abb = "DC"))
+
+# merge three dataframes: brewery count per state, state names and abbreviations, and state population data
+breweries_by_state_merge <- merge(breweries_by_state, statesDC, by="abbr")
+breweries_by_state_map <- merge(breweries_by_state_merge, statepop, by="abbr")
+
+### Map the total number of breweries in each state:
+plot_usmap(regions = c("states"), data = breweries_by_state_map,
+  values = "count", theme = theme_map(), labels = TRUE,
+  label_color = "black") +
+  scale_fill_continuous(name = "n", low="white", high="#c8102e") +
+  theme(legend.position="right") +
+  labs(title = 'Number of Breweries per state')
+#Histogram of the number of bweries per states 
+breweries %>% ggplot(aes(x=State)) + geom_histogram(stat="count")
+
+
+```
+
+```{r}
+#Question 2
+
+# Use Brewe_ID as primary key  and sort the result by Beer ID.
+merged <- inner_join(beers, breweries, by='Brew_ID') %>% arrange(Beer_ID)
+
+#The first six observations
+head(merged,6)
+
+#The last six observations
+tail(merged,6)
+```
+
+```{r}
+#Question 3
+#Addressing missing value
+vis_miss(merged) #This funtion is from package naniar and very effective for visualizing missing values
+md.pattern(merged) #This function also address the pattern of a missing value, its from the The MICE package (stands for Multiple Imputation by Chained Equations)
+
+#### We see that there are 3 patterns: 
+ # 1067  observations with complete information 
+#  1005 observations have a NA in IBU
+ #   62  observations have a NA in ABV
+
+```
+
+# Data Exploration:
+Determine Which Variables Have Missing Values and How Many
+```{r}
+n_cols = dim(merged)[2]
+for (i in 1:n_cols)
+{
+  print(c(colnames(merged[i]), sum(is.na(merged[i]))))
+}
+# It appears that ABV (62) and IBU(1005) are the only columns with missing values.
+
+# Extract the row indices of the missing values
+missingIBUindex <- which(is.na(merged$IBU))
+missingABVindex <- which(is.na(merged$ABV))
+allNAindex <- c(missingIBUindex,missingABVindex)
+length(missingIBUindex)
+length(missingABVindex)
+length(unique(allNAindex)) 
+
+#remove Missing values
+merged_remove <- merged %>% filter(!is.na(ABV) & !is.na(IBU))
+#To check for missing data again
+vis_miss(merged_remove)
+md.pattern(merged_remove)
+```
+
+```{r}
+#Question 4 
+# drop any observations without valid ABV values, group by state, and compute the median
+MedianAbv <- merged_remove %>% group_by(State) %>% summarize(median_abv = median(ABV,na.rm=TRUE))
+
+#Plot
+MedianAbv %>% ggplot(aes(x = State, y = median_abv)) + geom_col(color="black",fill="red") + 
+  theme(aspect.ratio = 0.2,axis.text=element_text(size=4)) +
+  ylab('Median ABV') + 
+  ggtitle('Median ABV by state (WithoutMissing Value)')
+```
+
+```{r}
+
+# drop any observations without valid IBU values, group by state, and compute the median
+MedianIBU <- merged_remove %>% group_by(State) %>% summarize(median_IBU = median(IBU,na.rm=TRUE))
+
+#Plot
+MedianIBU %>% ggplot(aes(x = State, y = median_IBU)) + geom_col(color="black",fill="red") + 
+  theme(aspect.ratio = 0.2,axis.text=element_text(size=4)) +
+  ylab('Median IBU') + 
+  ggtitle('Median IBU by state (WithoutMissing Value)')
+```
+
+```{r}
+#Question 5
+# drop any observations without valid ABV values, group by state, and compute the Max
+ MaxAbv<- merged_remove %>% group_by(State) %>% summarize(max_abv = max(ABV,na.rm=FALSE)) %>% arrange(desc(max_abv))
+
+# drop any observations without valid IBU values, group by state, and compute the Max
+MaxIBU <- merged_remove %>% group_by(State) %>% summarize(max_ibu = max(IBU,na.rm=TRUE)) %>% arrange(desc(max_ibu))
+
+
+
+```
+
+# Question 6
+Comment on the summary statistics and distribution of the ABV variable.
+```{r}
+
+summary(merged$ABV)
+sd(merged$ABV,na.rm=TRUE)
+```
+
+```{r}
+merged %>% 
+  ggplot(aes(sample=ABV)) +
+  stat_qq() + stat_qq_line() + 
+  ggtitle('Quantile-Quantile plot of ABV data')
+
+#Boxplot representation of the summary statistics
+merged %>% ggplot(aes(x=State,y=ABV)) + geom_boxplot()
+```
+
+From the upward curve in this plot, we infer that the data are somewhat skewed.
+This confirms what the histogram shows.  The apparent discontinuities at the
+ends of the curve are an indication that the ABV values have a few more extreme
+values than would be expected from a normal distribution.  This confirms what
+was shown in the box plot.
+
+```
+#Question 7
+```{r}
+MergedABVCLeaned <- merged$ABV
+MergedABVCLeaned[-which(is.na(MergedABVCLeaned))]
+
+MergedIBUCLeaned <- merged$IBU
+MergedIBUCLeaned[-which(is.na(MergedIBUCLeaned))]
+```
+# Fit linear model:
+```{r}
+IBUvsABU <- lm(MergedIBUCLeaned~MergedABVCLeaned)
+summary(IBUvsABU)
+```
+
+# Scatterplot with statistics:
+```{r}
+merged %>% ggplot(aes(x=IBU, y=ABV)) +
+  geom_point(col="#13294b") +
+  geom_text(x=125, y=0.01, label="R2 = 0.42") +
+  geom_smooth(method='lm', col="#c8102e") +
+  labs(title='IBU v ABV', x='IBU', y='ABV')
+  
+  #Boxplot graphical representation of the relationship between ABV and IBU
+  merged %>% ggplot(aes(x=IBU,y=ABV, fill=State)) + geom_boxplot() #ABV and IBU variance by state
+  
+  
+```
+
+```{R}
+#8 IPA knn classifications
+#reference code:
+#row_to_keep = c(TRUE, FALSE, TRUE, FALSE, TRUE, FALSE, TRUE)
+#myData = myData[row_to_keep,]
+
+IPA_data <- grepl("IPA", merged$Style) #records true for each style IPA
+IPA_df = merged[IPA_data,] #dataset containing only IPA styles
+
+library(class)
+library(caret)
+
+IPA_df_clean = na.omit(IPA_df) #remove NA values
+#plot for IPA styles knn classifiers
+IPA_df_clean %>% ggplot(aes(x=IBU,y=ABV,color=Style)) + geom_point() #ABV and IBU variance by state
+
+test_df = data.frame(ABV = 0.07 , IBU = 40)
+knn(IPA_df_clean[,c(4,5)], test_df, IPA_df_clean$Style, k = 31, prob = TRUE)
+#use k equal to cluster size with approximation of center as test_df?
+
+##knn classification and confusion matrix
+classifications = knn.cv(IPA_df_clean[,c(4,5)], IPA_df_clean$Style, k=21)
+data.frame(classifications = classifications, true = IPA_df_clean$Style)
+confusionMatrix(table(classifications,IPA_df_clean$Style))
+```
