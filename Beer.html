@@ -298,48 +298,19 @@ $(document).ready(function () {
 
 
 <pre class="r"><code>knitr::opts_chunk$set(echo = FALSE)
-library(tidyverse)</code></pre>
-<pre><code>## ── Attaching packages ────────────────────────────────────── tidyverse 1.3.0 ──</code></pre>
-<pre><code>## ✓ ggplot2 3.3.0     ✓ purrr   0.3.4
-## ✓ tibble  3.0.1     ✓ dplyr   0.8.5
-## ✓ tidyr   1.0.3     ✓ stringr 1.4.0
-## ✓ readr   1.3.1     ✓ forcats 0.5.0</code></pre>
-<pre><code>## ── Conflicts ───────────────────────────────────────── tidyverse_conflicts() ──
-## x dplyr::filter() masks stats::filter()
-## x dplyr::lag()    masks stats::lag()</code></pre>
-<pre class="r"><code>library(usmap)
-library(maps)</code></pre>
-<pre><code>## 
-## Attaching package: &#39;maps&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:purrr&#39;:
-## 
-##     map</code></pre>
-<pre class="r"><code>library(ggplot2)
-library(plotly)</code></pre>
-<pre><code>## 
-## Attaching package: &#39;plotly&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:ggplot2&#39;:
-## 
-##     last_plot</code></pre>
-<pre><code>## The following object is masked from &#39;package:stats&#39;:
-## 
-##     filter</code></pre>
-<pre><code>## The following object is masked from &#39;package:graphics&#39;:
-## 
-##     layout</code></pre>
-<pre class="r"><code>library(dplyr)
+library(tidyverse)
+library(usmap)
+library(maps)
+library(ggplot2)
+library(plotly)
+library(dplyr)
 library(ggthemes)
 library(grid)
 library(tidyr)
 library(stringr)
 library(naniar)
-library(mice)</code></pre>
-<pre><code>## 
-## Attaching package: &#39;mice&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:base&#39;:
-## 
-##     cbind, rbind</code></pre>
-<pre class="r"><code>library(rpart)
+library(mice)
+library(rpart)
 library(rpart.plot)</code></pre>
 <pre><code>## Warning: Use of `map_df$x` is discouraged. Use `x` instead.</code></pre>
 <pre><code>## Warning: Use of `map_df$y` is discouraged. Use `y` instead.</code></pre>
@@ -945,28 +916,6 @@ library(rpart.plot)</code></pre>
 <pre><code>
 &lt;img src=&quot;Beer_files/figure-html/unnamed-chunk-13-2.png&quot; width=&quot;672&quot; /&gt;
 
-</code></pre>
-</div>
-<div id="loading-required-package-lattice" class="section level2">
-<h2>Loading required package: lattice</h2>
-<pre><code></code></pre>
-</div>
-<div id="section-146" class="section level2">
-<h2></h2>
-</div>
-<div id="attaching-package-caret" class="section level2">
-<h2>Attaching package: ‘caret’</h2>
-<pre><code></code></pre>
-</div>
-<div id="the-following-object-is-masked-from-packagepurrr" class="section level2">
-<h2>The following object is masked from ‘package:purrr’:</h2>
-</div>
-<div id="section-147" class="section level2">
-<h2></h2>
-</div>
-<div id="lift" class="section level2">
-<h2>lift</h2>
-<pre><code>
 &lt;img src=&quot;Beer_files/figure-html/unnamed-chunk-14-1.png&quot; width=&quot;672&quot; /&gt;
 </code></pre>
 </div>
@@ -976,7 +925,7 @@ library(rpart.plot)</code></pre>
 <div id="attrprob" class="section level2">
 <h2>attr(,“prob”)</h2>
 </div>
-<div id="section-148" class="section level2">
+<div id="section-146" class="section level2">
 <h2>[1] 0.9032258</h2>
 </div>
 <div id="levels-american-double-imperial-ipa-american-ipa-english-india-pale-ale-ipa" class="section level2">
@@ -2166,10 +2115,10 @@ library(rpart.plot)</code></pre>
 <div id="confusion-matrix-and-statistics" class="section level2">
 <h2>Confusion Matrix and Statistics</h2>
 </div>
-<div id="section-149" class="section level2">
+<div id="section-147" class="section level2">
 <h2></h2>
 </div>
-<div id="section-150" class="section level2">
+<div id="section-148" class="section level2">
 <h2></h2>
 </div>
 <div id="classifications-american-double-imperial-ipa-american-ipa" class="section level2">
@@ -2190,7 +2139,7 @@ library(rpart.plot)</code></pre>
 <div id="english-india-pale-ale-ipa-0-0" class="section level2">
 <h2>English India Pale Ale (IPA) 0 0</h2>
 </div>
-<div id="section-151" class="section level2">
+<div id="section-149" class="section level2">
 <h2></h2>
 </div>
 <div id="classifications-american-white-ipa-belgian-ipa" class="section level2">
@@ -2211,7 +2160,7 @@ library(rpart.plot)</code></pre>
 <div id="english-india-pale-ale-ipa-0-0-1" class="section level2">
 <h2>English India Pale Ale (IPA) 0 0</h2>
 </div>
-<div id="section-152" class="section level2">
+<div id="section-150" class="section level2">
 <h2></h2>
 </div>
 <div id="classifications-english-india-pale-ale-ipa" class="section level2">
@@ -2232,13 +2181,13 @@ library(rpart.plot)</code></pre>
 <div id="english-india-pale-ale-ipa-0" class="section level2">
 <h2>English India Pale Ale (IPA) 0</h2>
 </div>
-<div id="section-153" class="section level2">
+<div id="section-151" class="section level2">
 <h2></h2>
 </div>
 <div id="overall-statistics" class="section level2">
 <h2>Overall Statistics</h2>
 </div>
-<div id="section-154" class="section level2">
+<div id="section-152" class="section level2">
 <h2></h2>
 </div>
 <div id="accuracy-0.7781" class="section level2">
@@ -2253,25 +2202,25 @@ library(rpart.plot)</code></pre>
 <div id="p-value-acc-nir-0.341" class="section level2">
 <h2>P-Value [Acc &gt; NIR] : 0.341</h2>
 </div>
-<div id="section-155" class="section level2">
+<div id="section-153" class="section level2">
 <h2></h2>
 </div>
 <div id="kappa-0.1009" class="section level2">
 <h2>Kappa : 0.1009</h2>
 </div>
-<div id="section-156" class="section level2">
+<div id="section-154" class="section level2">
 <h2></h2>
 </div>
 <div id="mcnemars-test-p-value-na" class="section level2">
 <h2>Mcnemar’s Test P-Value : NA</h2>
 </div>
-<div id="section-157" class="section level2">
+<div id="section-155" class="section level2">
 <h2></h2>
 </div>
 <div id="statistics-by-class" class="section level2">
 <h2>Statistics by Class:</h2>
 </div>
-<div id="section-158" class="section level2">
+<div id="section-156" class="section level2">
 <h2></h2>
 </div>
 <div id="class-american-double-imperial-ipa-class-american-ipa" class="section level2">
