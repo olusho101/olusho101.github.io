@@ -3,7 +3,9 @@ name: "my-website"
 navbar:
   title: "My website"
   left:
-    - text: "Home"
+    - text: "About me"
       href: index.html
     - text: "Beer Study"
-      href: Beer.rmd
+      href: Beer.html
+    - text: "Beer Report"
+      href: MSDS 6306 Case Study 1-3.pptx
