@@ -1,8 +1,8 @@
 ---
-title: "index"
+title: "About me"
 author: "Samuel"
 date: "7/21/2020"
-output: html_document
+output: html_documentre
 ---
 
 
