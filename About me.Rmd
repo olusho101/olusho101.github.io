@@ -1,0 +1,11 @@
+---
+title: "About me"
+author: "Samuel"
+date: "7/21/2020"
+output: html_documentre
+---
+
+
+Samuel Onalaja is BI developer who lives in Dallas Texas, He has a bachelors in computer science and currently pursing his master's degree in data science at SMU.
+
+
